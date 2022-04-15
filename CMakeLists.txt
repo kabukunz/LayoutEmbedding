@@ -51,7 +51,7 @@ target_include_directories(LayoutEmbedding PUBLIC library)
 target_compile_definitions(LayoutEmbedding PUBLIC LE_DATA_PATH="${CMAKE_CURRENT_SOURCE_DIR}/data")
 target_compile_definitions(LayoutEmbedding PUBLIC LE_OUTPUT_PATH="${LE_OUTPUT_PATH}")
 target_include_directories(LayoutEmbedding PRIVATE extern/libigl/include) # We use libigl header-only
-target_link_libraries(LayoutEmbedding PRIVATE stdc++fs)
+# target_link_libraries(LayoutEmbedding PRIVATE stdc++fs)
 
 # Executable targets (apps directory)
 file(GLOB_RECURSE LE_APP_SOURCE_FILES "apps/*.cc")

@@ -6,6 +6,8 @@
 
 #include <set>
 
+#include <random>
+
 namespace LayoutEmbedding {
 
 void make_layout_by_decimation(EmbeddingInput& _input, int _n_vertices)
@@ -80,7 +82,13 @@ void jitter_matching_vertices(EmbeddingInput& _input, int _steps, int _seed)
 void randomize_matching_vertices(EmbeddingInput& _input)
 {
     std::vector<pm::vertex_handle> t_vertices = _input.t_m.vertices().to_vector();
-    std::random_shuffle(t_vertices.begin(), t_vertices.end());
+
+    // https://stackoverflow.com/questions/45013977/random-shuffle-is-not-a-member-of-std-error
+    // std::random_shuffle(t_vertices.begin(), t_vertices.end());
+    
+    std::random_device rd;
+    std::mt19937 g(rd());
+    std::shuffle(t_vertices.begin(), t_vertices.end(), g);
 
     for (int i = 0; i < _input.l_m.vertices().size(); ++i) {
         const auto& l_v = _input.l_m.vertices()[i];
