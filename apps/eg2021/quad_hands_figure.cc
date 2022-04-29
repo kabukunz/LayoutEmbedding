@@ -47,18 +47,18 @@ int main(int argc, char** argv)
         return 1;
     }
 
-    // glow::glfw::GlfwContext ctx;
+    glow::glfw::GlfwContext ctx;
 
     std::vector<TestCase> tests =
     {
-        {
-            "001.obj",
-            glow::viewer::camera_transform(tg::pos3(0.329532f, 0.222535f, -1.284020f), tg::pos3(0.218050f, 0.131482f, -0.893754f)),
-        },
-        {
-            "002.obj",
-            glow::viewer::camera_transform(tg::pos3(-0.108347f, 0.312487f, -1.304698f), tg::pos3(-0.113235f, 0.193670f, -0.899082f)),
-        },
+        // {
+        //     "001.obj",
+        //     glow::viewer::camera_transform(tg::pos3(0.329532f, 0.222535f, -1.284020f), tg::pos3(0.218050f, 0.131482f, -0.893754f)),
+        // },
+        // {
+        //     "002.obj",
+        //     glow::viewer::camera_transform(tg::pos3(-0.108347f, 0.312487f, -1.304698f), tg::pos3(-0.113235f, 0.193670f, -0.899082f)),
+        // },
         {
             "003.obj",
             glow::viewer::camera_transform(tg::pos3(-0.001297f, 0.234221f, -1.339844f), tg::pos3(-0.014470f, 0.128625f, -0.906745f)),
@@ -86,17 +86,17 @@ int main(int argc, char** argv)
     input_ref.l_pos.apply([] (auto& p) { p = tg::rotate_z(p, tg::angle::from_degree(-90)); });
     input_ref.t_pos.apply([] (auto& p) { p = tg::rotate_z(p, tg::angle::from_degree(-90)); });
 
-    // // Screenshot
-    // {
-    //     auto cfg_style = default_style();
-    //     auto cfg_view = gv::config(tests.front().camera);
+    // Screenshot
+    {
+        auto cfg_style = default_style();
+        auto cfg_view = gv::config(tests.front().camera);
 
-    //     { // View layout
-    //         const fs::path screenshot_path = output_dir / ("layout.png");
-    //         auto cfg_screenshot = gv::config(gv::headless_screenshot(screenshot_size, screenshot_samples, screenshot_path.string(), GL_RGBA8));
-    //         view_layout(Embedding(input_ref));
-    //     }
-    // }
+        { // View layout
+            const fs::path screenshot_path = output_dir / ("layout.png");
+            auto cfg_screenshot = gv::config(gv::headless_screenshot(screenshot_size, screenshot_samples, screenshot_path.string(), GL_RGBA8));
+            view_layout(Embedding(input_ref));
+        }
+    }
 
     for (const auto& test : tests)
     {
@@ -117,17 +117,17 @@ int main(int argc, char** argv)
             input.l_pos[l_v] = input.t_pos[t_v];
         }
 
-        // // Screenshots
-        // {
-        //     auto cfg_style = default_style();
-        //     auto cfg_view = gv::config(test.camera);
+        // Screenshots
+        {
+            auto cfg_style = default_style();
+            auto cfg_view = gv::config(test.camera);
 
-        //     { // View target mesh
-        //         const fs::path screenshot_path = output_dir / (test.filename + "_target.png");
-        //         auto cfg_screenshot = gv::config(gv::headless_screenshot(screenshot_size, screenshot_samples, screenshot_path.string(), GL_RGBA8));
-        //         view_target(Embedding(input));
-        //     }
-        // }
+            { // View target mesh
+                const fs::path screenshot_path = output_dir / (test.filename + "_target.png");
+                auto cfg_screenshot = gv::config(gv::headless_screenshot(screenshot_size, screenshot_samples, screenshot_path.string(), GL_RGBA8));
+                view_target(Embedding(input));
+            }
+        }
 
         for (const auto& algorithm : algorithms)
         {
@@ -166,23 +166,27 @@ int main(int argc, char** argv)
             pm::face_attribute<pm::face_handle> q_matching_layout_face;
             const auto q_pos = extract_quad_mesh(em, param, q, q_matching_layout_face);
 
-            // // Screenshots
-            // {
-            //     auto cfg_style = default_style();
-            //     auto cfg_view = gv::config(test.camera);
+            // Screenshots
+            {
+                auto cfg_style = default_style();
+                auto cfg_view = gv::config(test.camera);
 
-            //     { // View embedding
-            //         const fs::path screenshot_path = output_dir / (test.filename + "_" + algorithm + "_embedding.png");
-            //         auto cfg_screenshot = gv::config(gv::headless_screenshot(screenshot_size, screenshot_samples, screenshot_path.string(), GL_RGBA8));
-            //         view_target(em);
-            //     }
+                { // View embedding
+                    const fs::path screenshot_path = output_dir / (test.filename + "_" + algorithm + "_embedding.png");
+                    auto cfg_screenshot = gv::config(gv::headless_screenshot(screenshot_size, screenshot_samples, screenshot_path.string(), GL_RGBA8));
+                    view_target(em);
+                }
 
-            //     { // View quad mesh
-            //         const fs::path screenshot_path = output_dir / (test.filename + "_" + algorithm + "_quad.png");
-            //         auto cfg_screenshot = gv::config(gv::headless_screenshot(screenshot_size, screenshot_samples, screenshot_path.string(), GL_RGBA8));
-            //         view_quad_mesh(q_pos, q_matching_layout_face);
-            //     }
-            // }
+                { // View quad mesh
+                    const fs::path screenshot_path = output_dir / (test.filename + "_" + algorithm + "_quad.png");
+                    auto cfg_screenshot = gv::config(gv::headless_screenshot(screenshot_size, screenshot_samples, screenshot_path.string(), GL_RGBA8));
+                    view_quad_mesh(q_pos, q_matching_layout_face);
+                }
+            }
+
+            // save quad mesh
+            const fs::path quad_obj_path = output_dir / (test.filename + "_" + "_quad.obj");
+            pm::save(quad_obj_path.string(), q_pos);
 
             // if (open_viewer)
             // {
