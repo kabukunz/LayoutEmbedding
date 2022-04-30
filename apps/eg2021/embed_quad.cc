@@ -24,10 +24,11 @@ int main(int argc, char** argv)
     fs::path target_path;
     std::string algo = "bnb";
     bool smooth = false;
-    bool open_viewer = false;
+    int max_subdiv = 12;
+    double edge_length = 0.05;
 
-    cxxopts::Options opts("embed",
-        "Embeds a given layout into a target mesh.\n"
+    cxxopts::Options opts("embed_quads",
+        "Creates a quad mesh from a target mesh using an embedded layout as a base complex.\n"
         "Layout connectivity is provided as a polygon mesh.\n"
         "Layout vertices are projected to target surface to define landmark positions.\n"
         "\n"
@@ -43,7 +44,10 @@ int main(int argc, char** argv)
     opts.add_options()("t,target", "Path to target mesh. Must be a triangle mesh.", cxxopts::value<std::string>());
     opts.add_options()("a,algo", "Algorithm, one of: bnb, greedy, praun, kraevoy, schreiner.", cxxopts::value<std::string>()->default_value("bnb"));
     opts.add_options()("s,smooth", "Apply smoothing post-process based on [Praun2001].", cxxopts::value<bool>());
-    opts.add_options()("v,viewer", "Open a window to inspect the resulting embedding.", cxxopts::value<bool>());
+
+    opts.add_options()("e,edge_length", "Quad edge length.", cxxopts::value<double>());
+    opts.add_options()("m,max_subdiv", "Max base complex subdivisions.", cxxopts::value<int>());
+
     opts.add_options()("h,help", "Help.");
     opts.parse_positional({"layout", "target"});
     opts.positional_help("[layout] [target]");
@@ -54,6 +58,9 @@ int main(int argc, char** argv)
         layout_path = args["layout"].as<std::string>();
         target_path = args["target"].as<std::string>();
 
+        edge_length = args["edge_length"].as<double>();
+        max_subdiv = args["max_subdiv"].as<int>();
+
         algo = args["algo"].as<std::string>();
         const std::set<std::string> valid_algos = { "bnb", "greedy", "praun", "kraevoy", "schreiner" };
         if (valid_algos.count(algo) == 0) {
@@ -61,7 +68,6 @@ int main(int argc, char** argv)
         }
 
         smooth = args["smooth"].as<bool>();
-        open_viewer = args["viewer"].as<bool>();
 
         if (args.count("help") || args.count("layout") == 0 || args.count("target") == 0) {
             std::cout << opts.help() << std::endl;
@@ -93,8 +99,8 @@ int main(int argc, char** argv)
     else if (algo == "bnb")
     {
         BranchAndBoundSettings settings;
-        settings.time_limit = 60;
-        settings.optimality_gap = 0.02;
+        // settings.time_limit = 60;
+        // settings.optimality_gap = 0.02;
         branch_and_bound(em, settings);
     }        
     else
@@ -112,7 +118,7 @@ int main(int argc, char** argv)
     std::cout << "saved embedding: " << embed_path.string() << std::endl;
 
     // Compute integer-grid map
-    const auto l_subdivisions = choose_loop_subdivisions(em, 0.05, 13);
+    const auto l_subdivisions = choose_loop_subdivisions(em, edge_length, max_subdiv);
     const auto param = parametrize_patches(em, l_subdivisions);
 
     // Extract quad mesh
