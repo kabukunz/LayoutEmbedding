@@ -24,6 +24,7 @@ int main(int argc, char** argv)
     fs::path target_path;
     std::string algo = "bnb";
     bool smooth = false;
+    int smooth_iter = 1;
     int max_subdiv = 12;
     double edge_length = 0.05;
 
@@ -47,6 +48,7 @@ int main(int argc, char** argv)
 
     opts.add_options()("e,edge_length", "Quad edge length.", cxxopts::value<double>());
     opts.add_options()("m,max_subdiv", "Max base complex subdivisions.", cxxopts::value<int>());
+    opts.add_options()("i,smooth_iter", "Smoothing iterations.", cxxopts::value<int>());
 
     opts.add_options()("h,help", "Help.");
     opts.parse_positional({"layout", "target"});
@@ -99,7 +101,7 @@ int main(int argc, char** argv)
     else if (algo == "bnb")
     {
         BranchAndBoundSettings settings;
-        // settings.time_limit = 60;
+        settings.time_limit = 60;
         // settings.optimality_gap = 0.02;
         branch_and_bound(em, settings);
     }        
@@ -108,7 +110,7 @@ int main(int argc, char** argv)
 
     // Smooth embedding
     if (smooth)
-        em = smooth_paths(em);
+        em = smooth_paths(em, smooth_iter);
 
     // Save embedding
     const auto output_dir = fs::path(LE_OUTPUT_PATH) / "embed";
