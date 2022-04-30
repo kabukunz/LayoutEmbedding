@@ -51,14 +51,14 @@ int main(int argc, char** argv)
 
     std::vector<TestCase> tests =
     {
-        // {
-        //     "001.obj",
-        //     glow::viewer::camera_transform(tg::pos3(0.329532f, 0.222535f, -1.284020f), tg::pos3(0.218050f, 0.131482f, -0.893754f)),
-        // },
-        // {
-        //     "002.obj",
-        //     glow::viewer::camera_transform(tg::pos3(-0.108347f, 0.312487f, -1.304698f), tg::pos3(-0.113235f, 0.193670f, -0.899082f)),
-        // },
+        {
+            "001.obj",
+            glow::viewer::camera_transform(tg::pos3(0.329532f, 0.222535f, -1.284020f), tg::pos3(0.218050f, 0.131482f, -0.893754f)),
+        },
+        {
+            "002.obj",
+            glow::viewer::camera_transform(tg::pos3(-0.108347f, 0.312487f, -1.304698f), tg::pos3(-0.113235f, 0.193670f, -0.899082f)),
+        },
         {
             "003.obj",
             glow::viewer::camera_transform(tg::pos3(-0.001297f, 0.234221f, -1.339844f), tg::pos3(-0.014470f, 0.128625f, -0.906745f)),
@@ -67,8 +67,8 @@ int main(int argc, char** argv)
 
     std::vector<std::string> algorithms =
     {
-        // "kraevoy",
-        // "schreiner",
+        "kraevoy",
+        "schreiner",
         "bnb",
     };
 
@@ -184,22 +184,18 @@ int main(int argc, char** argv)
                 }
             }
 
-            // save quad mesh
-            const fs::path quad_obj_path = output_dir / (test.filename + "_" + "_quad.obj");
-            pm::save(quad_obj_path.string(), q_pos);
-
-            // if (open_viewer)
-            // {
-            //     auto style = default_style();
-            //     auto g = gv::columns();
-            //     view_layout(em);
-            //     {
-            //         auto v = gv::view();
-            //         caption(algorithm);
-            //         view_target(em);
-            //     }
-            //     view_quad_mesh(q_pos, q_matching_layout_face);
-            // }
+            if (open_viewer)
+            {
+                auto style = default_style();
+                auto g = gv::columns();
+                view_layout(em);
+                {
+                    auto v = gv::view();
+                    caption(algorithm);
+                    view_target(em);
+                }
+                view_quad_mesh(q_pos, q_matching_layout_face);
+            }
         }
     }
 }
