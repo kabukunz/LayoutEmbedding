@@ -49,14 +49,14 @@ int main(int argc, char** argv)
         
     opts.add_options()("t,target", "Path to target mesh. Must be a triangle mesh.", cxxopts::value<std::string>());
     opts.add_options()("l,layout", "Path to layout mesh.", cxxopts::value<std::string>());
+    
     opts.add_options()("a,algo", "Algorithm, one of: bnb, greedy, praun, kraevoy, schreiner.", cxxopts::value<std::string>()->default_value("bnb"));
 
-    opts.add_options()("e,edge_length", "Quad edge length.", cxxopts::value<double>());
-    opts.add_options()("m,max_subdiv", "Max base complex subdivisions.", cxxopts::value<int>());
+    opts.add_options()("e,edge_length", "Quad edge length.", cxxopts::value<double>()->default_value("0.02"));
+    opts.add_options()("m,max_subdiv", "Max base complex subdivisions.", cxxopts::value<int>()->default_value("-1"));
 
     // opts.add_options()("s,smooth", "Apply smoothing post-process based on [Praun2001].", cxxopts::value<bool>());
-    opts.add_options()("i,smooth_iter", "Apply smoothing post-process based on [Praun2001] for n iterations", cxxopts::value<int>());
-    // cxxopts::value<int>()->default_value(0);
+    opts.add_options()("i,smooth_iter", "Apply smoothing post-process based on [Praun2001] for n iterations", cxxopts::value<int>()->default_value("-1"));
 
     opts.add_options()("h,help", "Help.");
     opts.parse_positional({"target", "layout"});
@@ -68,7 +68,7 @@ int main(int argc, char** argv)
         layout_path = args["layout"].as<std::string>();
         target_path = args["target"].as<std::string>();
 
-        edge_length = args["edge_length"].as<double>();
+        edge_length = args["edge_length"].as<double>();        
         max_subdiv = args["max_subdiv"].as<int>();
         smooth_iter = args["smooth_iter"].as<int>();
 
@@ -125,7 +125,7 @@ int main(int argc, char** argv)
         LE_ASSERT(false);
     
     // Smooth embedding
-    if (smooth_iter)
+    if (smooth_iter > 0)
         em = smooth_paths(em, smooth_iter);
 
     // Save embedding files (inp, lem)
