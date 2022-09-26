@@ -1,0 +1,12 @@
+lf QuadSphereNoise_layout.obj
+tif QuadSphereNoise_target_input.obj
+
+mv 0 0
+mv 1 25
+mv 2 50
+mv 3 75
+mv 4 116
+mv 5 121
+mv 6 146
+mv 7 151
+

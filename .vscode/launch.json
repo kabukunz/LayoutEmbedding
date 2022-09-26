@@ -1,0 +1,49 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Launch quad_embed sphere",
+            "program": "${workspaceFolder}/build/quad_embed",
+            "args": [
+                "-t",
+                "${workspaceFolder}/data/models/target-meshes/QuadSphere.obj",
+                "-l",
+                "${workspaceFolder}/data/models/layouts/QuadSphereQuadLayout.obj",
+                "-e",
+                "0.02",
+                "-m",
+                "12",
+                "-i",
+                "2",
+            ],
+            "cwd": "${workspaceFolder}"
+        },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Launch quad_embed sphere noise",
+            "program": "${workspaceFolder}/build/quad_embed",
+            "args": [
+                "-t",
+                "${workspaceFolder}/data/models/target-meshes/QuadSphereNoise.obj",
+                "-l",
+                "${workspaceFolder}/data/models/layouts/QuadSphereQuadLayout.obj",
+                "-e",
+                "0.02",
+                "-m",
+                "12",
+                "-i",
+                "2",
+            ],
+            "cwd": "${workspaceFolder}"
+        }
+    ]
+}
+
+
+// quad_embed.py -t <target.obj> -l <layout.obj> -e 0.02 -m -1 -i -1
