@@ -4,6 +4,7 @@ project(layout-embedding)
 set(LE_OUTPUT_PATH "${CMAKE_CURRENT_BINARY_DIR}/output" CACHE PATH "Output path for various files produced by the applications.")
 
 set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # Dependencies
 # Warning: The order of these add_subdirectories matters, there are interdependencies.
@@ -50,11 +51,14 @@ target_link_libraries(LayoutEmbedding PUBLIC imgui typed-geometry polymesh glow-
 target_include_directories(LayoutEmbedding PUBLIC library)
 target_compile_definitions(LayoutEmbedding PUBLIC LE_DATA_PATH="${CMAKE_CURRENT_SOURCE_DIR}/data")
 target_compile_definitions(LayoutEmbedding PUBLIC LE_OUTPUT_PATH="${LE_OUTPUT_PATH}")
+add_compile_definitions(_USE_MATH_DEFINES=1)
 target_include_directories(LayoutEmbedding PRIVATE extern/libigl/include) # We use libigl header-only
-# target_link_libraries(LayoutEmbedding PRIVATE stdc++fs)
+target_link_libraries(LayoutEmbedding PRIVATE stdc++fs)
+
+target_include_directories(LayoutEmbedding PUBLIC "extern/polymesh/src/")
 
 # Executable targets (apps directory)
-file(GLOB_RECURSE LE_APP_SOURCE_FILES "apps/*.cc")
+file(GLOB_RECURSE LE_APP_SOURCE_FILES "apps/*/c/")
 foreach(LE_APP_SOURCE_FILE ${LE_APP_SOURCE_FILES})
   get_filename_component(LE_APP_NAME ${LE_APP_SOURCE_FILE} NAME_WE)
   message("Executable target: ${LE_APP_NAME}")

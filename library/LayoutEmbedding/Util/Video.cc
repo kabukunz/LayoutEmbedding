@@ -8,6 +8,8 @@
 
 #include <cstdio>
 
+#include <string>
+
 namespace LayoutEmbedding
 {
 
